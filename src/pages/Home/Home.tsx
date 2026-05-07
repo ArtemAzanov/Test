@@ -3,7 +3,7 @@ import { useState } from 'react';
 import Vopros from '@/components/Psiprops/Vopros';
 import { questions } from '../About/About';
 
-    const Home = () => {
+const Home = () => {
 
 
     const EXCITATION_YES = [3, 4, 7, 13, 15, 16, 19, 21, 23, 24, 32, 39, 45, 56, 60, 61, 66, 72, 73, 78, 81, 82, 83, 94, 97, 98, 102, 105, 106, 113, 114, 117, 121, 122, 124, 130, 132, 133];
@@ -60,7 +60,7 @@ import { questions } from '../About/About';
 
             const isYes = answer === 'yes';
 
-            
+
             if (EXCITATION_YES.includes(num) && isYes) excitation += 2;
             if (EXCITATION_NO.includes(num) && !isYes) excitation += 2;
 
@@ -79,25 +79,64 @@ import { questions } from '../About/About';
     if (finish) {
         const scores = calculate();
         return (
-            <div>
-                <h2>Результаты Теста</h2>
-                <p>Сила Возбуждения: {scores.excitation}
-                    {scores.excitation >= 42 ? '(высокая)' : '(норма/низкая)'}
-                </p>
-                <p>Сила Торможения: {scores.inhibition}
-                    {scores.inhibition >= 42 ? '(высокая)' : '(норма/низкая)'}
-                </p>
-                <p>Сила Подвижности: {scores.mobility}
-                    {scores.mobility >= 42 ? '(высокая)' : '(норма/низкая)'}
-                </p>
-
+    <div className="results-container">
+        <h2 className="results-title">📊 Результаты Теста</h2>
+        
+        <div className="scores-list">
+            <div className="score-item excitation">
+                <span className="score-label">Сила Возбуждения:</span>
+                <span className="score-value">{scores.excitation}</span>
+                <span className={`score-status ${scores.excitation >= 42 ? 'high' : 'normal'}`}>
+                    {scores.excitation >= 42 ? 'высокая' : 'норма/низкая'}
+                </span>
             </div>
-        )
+            
+            <div className="score-item inhibition">
+                <span className="score-label">Сила Торможения:</span>
+                <span className="score-value">{scores.inhibition}</span>
+                <span className={`score-status ${scores.inhibition >= 42 ? 'high' : 'normal'}`}>
+                    {scores.inhibition >= 42 ? 'высокая' : 'норма/низкая'}
+                </span>
+            </div>
+            
+            <div className="score-item mobility">
+                <span className="score-label">Сила Подвижности:</span>
+                <span className="score-value">{scores.mobility}</span>
+                <span className={`score-status ${scores.mobility >= 42 ? 'high' : 'normal'}`}>
+                    {scores.mobility >= 42 ? 'высокая' : 'норма/низкая'}
+                </span>
+            </div>
+        </div>
+
+        <div className="result-card">
+            {scores.excitation >= 42 && scores.inhibition >= 42 && scores.mobility >= 42 ? (
+                <>
+                    <div className="result-icon">💪</div>
+                    <p><strong>Результат:</strong> Сильный, уравновешенный, подвижный тип. Вы выносливы, спокойны и быстро переключаетесь. Это хорошо для стресса, шума и многозадачности.</p>
+                </>
+            ) : scores.excitation < 42 && scores.inhibition < 42 && scores.mobility < 42 ? (
+                <>
+                    <div className="result-icon">🌱</div>
+                    <p><strong>Результат:</strong> Слабый, инертный, неуравновешенный тип. Вы быстро устаёте, трудно себя контролируете, плохо переключаетесь. Вам нужна тихая и спокойная среда.</p>
+                </>
+            ) : (
+                <>
+                    <div className="result-icon">⚖️</div>
+                    <p><strong>Результат:</strong> Смешанный тип. У вас есть и сильные, и слабые стороны. Учитывайте их при планировании нагрузки.</p>
+                </>
+            )}
+        </div>
+    </div>
+)
+
     }
 
-    return <div>
-        <p>Вопрос {index + 1} из {questions.length}</p>
-        <p>{questions[index].text}</p>
+    return <div className="test-container">
+        <div className="progress-info">
+            <span className="question-badge">Вопрос {index + 1}</span>
+            <span className="question-total">из {questions.length}</span>
+        </div>
+        <p className="question-text">{questions[index].text}</p>
         <Vopros onAnswer={handAnswer} />
     </div>
 
